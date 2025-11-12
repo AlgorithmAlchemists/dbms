@@ -1,0 +1,95 @@
+-- Create Table: client_master
+CREATE TABLE client_master (
+    client_no INT,
+    client_name VARCHAR(20),
+    address VARCHAR(50),
+    city VARCHAR(10),
+    pincode INT,
+    state VARCHAR(20),
+    bal_due FLOAT,
+    PRIMARY KEY (client_no)
+);
+
+-- Insert Data into client_master
+INSERT INTO client_master VALUES 
+(1, 'abhi', 'nasik', 'nasik', 422004, 'MH', 5000.0),
+(2, 'piyu', 'nasik', 'nasik', 422004, 'MH', 10000.0),
+(4, 'abd', 'nasik', 'nasik', 422003, 'MH', 5000.0),
+(5, 'abc', 'nasik', 'nasik', 422003, 'MH', 5000.0),
+(6, 'xyz', 'nasik', 'nasik', 422004, 'MH', 6000.0);
+
+SELECT * FROM client_master;
+SELECT client_name, client_no FROM client_master;
+
+-- Create Table: product_master
+CREATE TABLE product_master (
+    product_no INT,
+    description VARCHAR(20),
+    profit_per FLOAT,
+    unit_measure VARCHAR(10),
+    quantity INT,
+    reorder INT,
+    sell_price FLOAT,
+    cost_price FLOAT,
+    PRIMARY KEY (product_no)
+);
+
+-- Insert Data into product_master
+INSERT INTO product_master VALUES (1, 'shampoo', 1.0, 'one', 4, 2, 10.0, 15.0);
+INSERT INTO product_master VALUES (2, 'oil', 13.0, 'one', 4, 2, 11.0, 16.0);
+
+-- Alter Table: Add column
+ALTER TABLE client_master ADD telephone_no INT;
+
+SELECT * FROM client_master;
+SELECT * FROM product_master;
+
+-- Create Index on client_master
+CREATE INDEX client_search ON client_master (client_no);
+
+-- Create Table: auto (Demonstrating AUTO_INCREMENT)
+CREATE TABLE auto (
+    roll_no INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(20),
+    PRIMARY KEY (roll_no)
+);
+
+-- Insert initial data into auto
+INSERT INTO auto (name) VALUES ('abc');
+INSERT INTO auto (name) VALUES ('adc');
+
+-- Alter Table: Reset AUTO_INCREMENT value
+ALTER TABLE auto AUTO_INCREMENT = 100;
+
+-- Insert data into auto using NULL 
+INSERT INTO auto VALUES (NULL, 'abd');
+INSERT INTO auto VALUES (NULL, 'reh');
+
+SELECT * FROM auto;
+
+-- Update Data: Change client_name where client_no is 4
+UPDATE client_master SET client_name = 'nut' WHERE client_no = 4;
+
+SELECT * FROM client_master;
+
+-- Create Index on client_master
+CREATE INDEX client_find ON client_master (client_name, city);
+
+SHOW TABLES;
+
+SELECT * FROM product_master;
+
+-- Alter Table: Rename client_master
+ALTER TABLE client_master RENAME TO c_master;
+
+INSERT INTO product_master VALUES (3, 'nutela', 15.0, 'three', 40, 5, 110.0, 123.0);
+
+-- Alter Table: Modify column data type
+ALTER TABLE product_master MODIFY sell_price FLOAT(10,2);
+
+-- Create View
+CREATE VIEW client AS
+SELECT client_no, client_name
+FROM c_master;
+
+SELECT * FROM client;

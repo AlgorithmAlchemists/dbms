@@ -1,0 +1,93 @@
+SET GLOBAL log_bin_trust_function_creators = 1;
+create database p5;
+DELIMITER //
+
+USE p5//
+
+DROP TABLE IF EXISTS marks;
+DROP TABLE IF EXISTS result;
+
+CREATE TABLE marks (
+    roll_no INT, 
+    name VARCHAR(20),
+    total_marks INT
+)//
+
+CREATE TABLE result (
+    roll_no INT,
+    name VARCHAR(20), 
+    class VARCHAR(20)
+)//
+
+INSERT INTO marks (roll_no, name, total_marks) VALUES
+(1, 'Abhi', 1400),
+(2, 'piyush', 980),
+(3, 'hitesh', 880),
+(4, 'ashley', 820),
+(5, 'partik', 740),
+(6, 'patil', 640)//
+
+SELECT * FROM marks;
+
+DROP PROCEDURE IF EXISTS proc_grade//
+CREATE PROCEDURE proc_grade(
+    IN p_marks INT, 
+    OUT p_class CHAR(20)
+)
+BEGIN
+    IF (p_marks <= 1500 AND p_marks >= 990) THEN
+        SET p_class = 'Distincton';
+    
+    ELSEIF (p_marks <= 989 AND p_marks >= 900) THEN
+        SET p_class = 'First Class';
+    
+    ELSEIF (p_marks <= 899 AND p_marks >= 825) THEN
+        SET p_class = 'Higher Second Class';
+
+    ELSEIF (p_marks <= 824 AND p_marks >= 750) THEN
+        SET p_class = 'Second Class';
+
+    ELSEIF (p_marks <= 749 AND p_marks >= 650) THEN
+        SET p_class = 'Passed';
+    
+    ELSEIF (p_marks < 650) THEN
+        SET p_class = 'Fail';
+        
+    ELSE
+        SET p_class = 'N/A';
+    END IF;
+END//
+
+DROP FUNCTION IF EXISTS final_result3//
+CREATE FUNCTION final_result3(p_roll INT)
+RETURNS INT
+BEGIN
+    DECLARE v_fmarks INT;
+    DECLARE v_stud_name VARCHAR(20);
+    
+    SELECT total_marks, name INTO v_fmarks, v_stud_name 
+    FROM marks 
+    WHERE roll_no = p_roll;
+    
+    CALL proc_grade(v_fmarks, @grade);
+    
+    INSERT INTO result (roll_no, name, class) 
+    VALUES (p_roll, v_stud_name, @grade);
+    
+    RETURN p_roll;
+END//
+
+DELIMITER ;
+
+SELECT final_result3(2);
+
+SELECT final_result3(3);
+
+SELECT final_result3(4);
+
+SELECT final_result3(5);
+
+SELECT * FROM result;
+
+SELECT final_result3(1);
+SELECT * FROM result;
